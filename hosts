@@ -1,0 +1,31 @@
+[local]
+127.0.0.1
+
+[dev]
+#dev.example.com  ansible_port=2202  ansible_user=azoci ansible_ssh_pass=1234
+dev.example.com
+
+[prd]
+prd1.example.com
+prd2.example.com
+
+[dev:vars]
+ansible_port=2202
+ansible_user=azoci
+ansible_ssh_pass=1234
+kibana_endpoint=dev.example.com:5555
+es_endpoint=dev.example.com:9999
+beat_user=azoci
+ansible_sudo_pass=1234
+beat_version=6.x
+
+[prd:vars]
+ansible_port=2202
+ansible_user=azoci
+ansible_ssh_pass=1234
+kibana_endpoint=prd1.example.com:5555
+es_endpoint=prd2.example.com:9999
+beat_user=azoci
+ansible_sudo_pass=1234
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+beat_version=6.x

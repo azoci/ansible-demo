@@ -1,0 +1,59 @@
+---
+
+- name: Add Elasticsearch GPG key.
+  rpm_key:
+    key: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  become: yes
+
+- name: Add Metricbeat repository.
+  template:
+    src: beats.repo.j2
+    dest: /etc/yum.repos.d/beats.repo
+    mode: 0644
+  become: yes
+
+- name: Install Metricbeat.
+  package: name=metricbeat-6.3.1-1 state=present
+  become: yes
+
+
+- name: Copy metricbeat template file
+  template:
+    src: metricbeat.yml.j2
+    dest: "/etc/metricbeat/metricbeat.yml"
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Copy system template file
+  template:
+    src: system.yml.j2
+    dest: "/etc/metricbeat/modules.d/system.yml"
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Copy docker template file
+  template:
+    src: docker.yml.disabled.j2
+    dest: "/etc/metricbeat/modules.d/docker.yml.disabled"
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Enable docker module
+  shell: metricbeat modules enable docker
+  args:
+      executable: /bin/bash
+  become: yes
+
+- name: Ensure Metricbeat is started and enabled at boot.
+  service:
+    name: metricbeat
+    state: started
+    enabled: true
+  become: yes

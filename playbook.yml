@@ -1,0 +1,9 @@
+---
+- name: Beat
+  hosts: prd
+  strategy: free
+  gather_facts: False
+
+  roles:
+    - metricbeat
+    - filebeat
